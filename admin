@@ -1,0 +1,3 @@
+php artisan agriscan:create-admin you@example.com "Your Name"
+php artisan agriscan:create-admin admin@gmail.com
+pass admin12345

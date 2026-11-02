@@ -1,0 +1,14 @@
+{
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tailwindcss -i resources/css/app.css -o public/css/app.css --minify && node scripts/vendor.mjs",
+    "watch": "tailwindcss -i resources/css/app.css -o public/css/app.css --watch"
+  },
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.1.0",
+    "alpinejs": "^3.14.0",
+    "chart.js": "^4.4.0",
+    "tailwindcss": "^4.1.0"
+  }
+}

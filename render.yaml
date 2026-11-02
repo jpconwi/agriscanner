@@ -1,0 +1,32 @@
+# Render Blueprint. Works on the Free web-service plan (which sleeps when idle and has NO background workers).
+# Secrets are marked sync:false so you enter them in the Render dashboard; nothing sensitive lives in git.
+services:
+  - type: web
+    name: agriscan
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    plan: free
+    healthCheckPath: /api/v1/health
+    autoDeploy: true
+    envVars:
+      - { key: APP_ENV, value: production }
+      - { key: APP_DEBUG, value: "false" }
+      - { key: LOG_CHANNEL, value: stderr }
+      - { key: APP_KEY, sync: false }
+      - { key: APP_URL, sync: false }
+      - { key: SESSION_DRIVER, value: cookie }
+      - { key: SESSION_SECURE_COOKIE, value: "true" }
+      - { key: DB_URL, sync: false }
+      - { key: HUGGINGFACE_API_TOKEN, sync: false }
+      - { key: HUGGINGFACE_MODEL, sync: false }
+      - { key: HUGGINGFACE_TASK, value: image-classification }
+      - { key: R2_ACCESS_KEY_ID, sync: false }
+      - { key: R2_SECRET_ACCESS_KEY, sync: false }
+      - { key: R2_BUCKET, sync: false }
+      - { key: R2_ENDPOINT, sync: false }
+      - { key: INTERNAL_CRON_TOKEN, sync: false }
+      - { key: QUEUE_CONNECTION, value: sync }
+      - { key: CACHE_STORE, value: database }
+      - { key: DB_SSLMODE, value: require }
+      - { key: R2_ENABLED, value: "true" }

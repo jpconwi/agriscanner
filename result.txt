@@ -1,0 +1,275 @@
+﻿
+[2026-11-02 06:56:03] testing.WARNING: ai.provider_failed 
+{"provider":"huggingface","category":"provider_error","status":503,"attempt":1} 
+  Γ£ô failed jobs are listed                                                                                         
+0.03s  
+[2026-11-02 06:56:04] testing.WARNING: ai.provider_failed 
+{"provider":"huggingface","category":"timeout","status":408,"attempt":1} 
+[2026-11-02 06:56:04] testing.WARNING: ai.provider_failed 
+{"provider":"huggingface","category":"rate_limited","status":429,"attempt":2} 
+[2026-11-02 06:56:04] testing.WARNING: ai.provider_failed 
+{"provider":"huggingface","category":"provider_error","status":503,"attempt":1} 
+[2026-11-02 06:56:04] testing.WARNING: ai.provider_failed 
+{"provider":"huggingface","category":"provider_error","status":503,"attempt":2} 
+[2026-11-02 06:56:04] testing.WARNING: ai.provider_failed 
+{"provider":"huggingface","category":"provider_error","status":503,"attempt":3} 
+[2026-11-02 06:56:04] testing.WARNING: ai.provider_failed 
+{"provider":"huggingface","category":"auth_error","status":401,"attempt":1} 
+[2026-11-02 06:56:04] testing.WARNING: ai.provider_failed 
+{"provider":"huggingface","category":"payment_required","status":402,"attempt":1} 
+[2026-11-02 06:56:04] testing.WARNING: ai.provider_failed 
+{"provider":"huggingface","category":"model_unavailable","status":404,"attempt":1} 
+[2026-11-02 06:56:04] testing.WARNING: ai.provider_failed 
+{"provider":"huggingface","category":"invalid_input","status":422,"attempt":1} 
+[2026-11-02 06:56:04] testing.WARNING: ai.provider_failed 
+{"provider":"huggingface","category":"provider_error","status":503,"attempt":1} 
+[2026-11-02 06:56:04] testing.WARNING: ai.provider_failed 
+{"provider":"huggingface","category":"provider_error","status":503,"attempt":2} 
+[2026-11-02 06:56:04] testing.WARNING: ai.provider_failed 
+{"provider":"huggingface","category":"provider_error","status":503,"attempt":3} 
+[2026-11-02 06:56:04] testing.WARNING: ai.provider_failed 
+{"provider":"grok","category":"timeout","status":408,"attempt":1} 
+[2026-11-02 06:56:04] testing.WARNING: ai.provider_failed 
+{"provider":"grok","category":"timeout","status":408,"attempt":2} 
+[2026-11-02 06:56:04] testing.WARNING: ai.provider_failed 
+{"provider":"grok","category":"timeout","status":408,"attempt":3} 
+[2026-11-02 06:56:04] testing.WARNING: ai.provider_failed 
+{"provider":"huggingface","category":"auth_error","status":401,"attempt":1} 
+[2026-11-02 06:56:04] testing.WARNING: ai.provider_failed 
+{"provider":"huggingface","category":"provider_error","status":503,"attempt":1} 
+[2026-11-02 06:56:04] testing.WARNING: ai.provider_failed 
+{"provider":"huggingface","category":"provider_error","status":503,"attempt":2} 
+[2026-11-02 06:56:04] testing.WARNING: ai.provider_failed 
+{"provider":"huggingface","category":"provider_error","status":503,"attempt":3} 
+[2026-11-02 06:56:04] testing.WARNING: ai.provider_failed 
+{"provider":"grok","category":"provider_error","status":503,"attempt":1} 
+[2026-11-02 06:56:04] testing.WARNING: ai.provider_failed 
+{"provider":"grok","category":"provider_error","status":503,"attempt":2} 
+[2026-11-02 06:56:04] testing.WARNING: ai.provider_failed 
+{"provider":"grok","category":"provider_error","status":503,"attempt":3} 
+[2026-11-02 06:56:04] testing.ERROR: Crop analysis is unavailable right now, so no result was produced. Your photo was 
+not analysed ΓÇö please try again in a few minutes. {"userId":1,"exception":"[object] 
+(App\\Services\\Ai\\Exceptions\\AnalysisUnavailableException(code: 0): Crop analysis is unavailable right now, so no 
+result was produced. Your photo was not analysed ΓÇö please try again in a few minutes. at 
+C:/Users/Win11/OneDrive/Documents/agriscanner/app/Services/Ai/AiAnalysisService.php:93)
+  Γ£ô a transient error is retried on the same provider with backoff                                                 
+0.02s  
+  Γ£ô permanent provider errors skip straight to the next provider without retrying                                  
+0.02s  
+  Γ£ô when every provider fails a clear error is thrown and nothing is fabricated                                    
+0.02s  
+  Γ£ô huggingface http errors map to the right categories                                                            
+0.02s  
+[2026-11-02 06:56:06] testing.ERROR: SQLSTATE[08006] [7] could not connect to server: Connection refused (Connection: 
+pgsql, SQL: insert into secret_table) {"exception":"[object] (Illuminate\\Database\\QueryException(code: 0): 
+SQLSTATE[08006] [7] could not connect to server: Connection refused (Connection: pgsql, SQL: insert into secret_table) 
+at C:/Users/Win11/OneDrive/Documents/agriscanner/tests/Feature/DatabaseOutageTest.php:20)
+[previous exception] [object] (PDOException(code: 0): SQLSTATE[08006] [7] could not connect to server: Connection 
+refused at C:/Users/Win11/OneDrive/Documents/agriscanner/tests/Feature/DatabaseOutageTest.php:20)
+[2026-11-02 06:56:06] testing.ERROR: duplicate key value violates unique constraint "secret_idx" (Connection: pgsql, 
+SQL: insert into secret_table) {"exception":"[object] (Illuminate\\Database\\QueryException(code: 0): duplicate key 
+value violates unique constraint \"secret_idx\" (Connection: pgsql, SQL: insert into secret_table) at 
+C:/Users/Win11/OneDrive/Documents/agriscanner/tests/Feature/DatabaseOutageTest.php:61)
+#0 C:/Users/Win11/OneDrive/Documents/agriscanner/vendor/laravel/framework/src/Illuminate/Routing/CallableDispatcher.php(3
+9): Tests/Feature/DatabaseOutageTest->{closure:Tests/Feature/DatabaseOutageTest::test_other_database_errors_return_a_gene
+ric_500_without_leaking_sql():58}()
+#37 C:/Users/Win11/OneDrive/Documents/agriscanner/vendor/phpunit/phpunit/src/Framework/TestCase.php(1667): 
+Tests/Feature/DatabaseOutageTest->test_other_database_errors_return_a_generic_500_without_leaking_sql()
+[previous exception] [object] (PDOException(code: 0): duplicate key value violates unique constraint \"secret_idx\" at 
+C:/Users/Win11/OneDrive/Documents/agriscanner/tests/Feature/DatabaseOutageTest.php:59)
+#0 C:/Users/Win11/OneDrive/Documents/agriscanner/vendor/laravel/framework/src/Illuminate/Routing/CallableDispatcher.php(3
+9): Tests/Feature/DatabaseOutageTest->{closure:Tests/Feature/DatabaseOutageTest::test_other_database_errors_return_a_gene
+ric_500_without_leaking_sql():58}()
+#37 C:/Users/Win11/OneDrive/Documents/agriscanner/vendor/phpunit/phpunit/src/Framework/TestCase.php(1667): 
+Tests/Feature/DatabaseOutageTest->test_other_database_errors_return_a_generic_500_without_leaking_sql()
+[2026-11-02 06:56:06] testing.ERROR: The analysis finished but the result is NOT saved yet because the database is 
+unavailable. It has been recorded for automatic recovery; check your scan history again shortly, or retry the upload. 
+{"userId":1,"exception":"[object] (App\\Services\\Scans\\ScanNotSavedException(code: 0): The analysis finished but the 
+result is NOT saved yet because the database is unavailable. It has been recorded for automatic recovery; check your 
+scan history again shortly, or retry the upload. at 
+C:/Users/Win11/OneDrive/Documents/agriscanner/app/Services/Scans/ScanService.php:150)
+#61 C:/Users/Win11/OneDrive/Documents/agriscanner/vendor/phpunit/phpunit/src/Framework/TestCase.php(1667): 
+Tests/Feature/DatabaseOutageTest->test_a_failed_scan_save_is_never_reported_as_saved_and_is_recorded_for_recovery()
+[2026-11-02 06:56:06] testing.ERROR: The analysis finished but the result is NOT saved yet because the database is 
+unavailable. It has been recorded for automatic recovery; check your scan history again shortly, or retry the upload. 
+{"userId":1,"exception":"[object] (App\\Services\\Scans\\ScanNotSavedException(code: 0): The analysis finished but the 
+result is NOT saved yet because the database is unavailable. It has been recorded for automatic recovery; check your 
+scan history again shortly, or retry the upload. at 
+C:/Users/Win11/OneDrive/Documents/agriscanner/app/Services/Scans/ScanService.php:150)
+  Γ£ô connection failures are distinguished from ordinary query errors                                               
+0.02s  
+  Γ¿» other database errors return a generic 500 without leaking sql                                                 
+0.03s  
+  Γ£ô a failed scan save is never reported as saved and is recorded for recovery                                     
+0.03s  
+  Γ£ô the photo stays in storage and counted after a failed save                                                     
+0.03s  
+[2026-11-02 06:56:06] testing.ERROR: The analysis finished but the result is NOT saved yet because the database is 
+unavailable. It has been recorded for automatic recovery; check your scan history again shortly, or retry the upload. 
+{"userId":1,"exception":"[object] (App\\Services\\Scans\\ScanNotSavedException(code: 0): The analysis finished but the 
+result is NOT saved yet because the database is unavailable. It has been recorded for automatic recovery; check your 
+scan history again shortly, or retry the upload. at 
+C:/Users/Win11/OneDrive/Documents/agriscanner/app/Services/Scans/ScanService.php:150)
+[2026-11-02 06:56:07] testing.WARNING: journal.primary_failed  
+[2026-11-02 06:56:07] testing.ERROR: The analysis finished but the result is NOT saved yet because the database is 
+unavailable. It has been recorded for automatic recovery; check your scan history again shortly, or retry the upload. 
+{"userId":1,"exception":"[object] (App\\Services\\Scans\\ScanNotSavedException(code: 0): The analysis finished but the 
+result is NOT saved yet because the database is unavailable. It has been recorded for automatic recovery; check your 
+scan history again shortly, or retry the upload. at 
+C:/Users/Win11/OneDrive/Documents/agriscanner/app/Services/Scans/ScanService.php:150)
+[2026-11-02 06:56:07] testing.WARNING: journal.primary_failed  
+[2026-11-02 06:56:07] testing.WARNING: journal.primary_failed  
+[2026-11-02 06:56:07] testing.ERROR: The analysis finished but the result is NOT saved yet because the database is 
+unavailable. It has been recorded for automatic recovery; check your scan history again shortly, or retry the upload. 
+{"userId":1,"exception":"[object] (App\\Services\\Scans\\ScanNotSavedException(code: 0): The analysis finished but the 
+result is NOT saved yet because the database is unavailable. It has been recorded for automatic recovery; check your 
+scan history again shortly, or retry the upload. at 
+C:/Users/Win11/OneDrive/Documents/agriscanner/app/Services/Scans/ScanService.php:150)
+[2026-11-02 06:56:07] testing.ERROR: The analysis finished but the result is NOT saved yet because the database is 
+unavailable. It has been recorded for automatic recovery; check your scan history again shortly, or retry the upload. 
+{"userId":1,"exception":"[object] (App\\Services\\Scans\\ScanNotSavedException(code: 0): The analysis finished but the 
+result is NOT saved yet because the database is unavailable. It has been recorded for automatic recovery; check your 
+scan history again shortly, or retry the upload. at 
+C:/Users/Win11/OneDrive/Documents/agriscanner/app/Services/Scans/ScanService.php:150)
+#61 C:/Users/Win11/OneDrive/Documents/agriscanner/vendor/phpunit/phpunit/src/Framework/TestCase.php(1667): 
+Tests/Feature/DatabaseOutageTest->test_the_photo_stays_in_storage_and_counted_after_a_failed_save()
+[2026-11-02 06:56:07] testing.ERROR: This photo would exceed your storage quota. Delete some scans to free space and try 
+again. {"userId":1,"exception":"[object] (App\\Services\\Quota\\QuotaExceededException(code: 0): This photo would exceed 
+your storage quota. Delete some scans to free space and try again. at 
+C:/Users/Win11/OneDrive/Documents/agriscanner/app/Services/Quota/QuotaExceededException.php:16)
+#0 C:/Users/Win11/OneDrive/Documents/agriscanner/app/Services/Quota/QuotaService.php(64): 
+App/Services/Quota/QuotaExceededException::wouldExceed()
+[2026-11-02 06:56:07] testing.ERROR: This photo would exceed your storage quota. Delete some scans to free space and try 
+again. {"userId":1,"exception":"[object] (App\\Services\\Quota\\QuotaExceededException(code: 0): This photo would exceed 
+your storage quota. Delete some scans to free space and try again. at 
+C:/Users/Win11/OneDrive/Documents/agriscanner/app/Services/Quota/QuotaExceededException.php:16)
+#0 C:/Users/Win11/OneDrive/Documents/agriscanner/app/Services/Quota/QuotaService.php(64): 
+App/Services/Quota/QuotaExceededException::wouldExceed()
+[2026-11-02 06:56:07] testing.ERROR: Your storage is full. Delete some scans to free space before uploading more. 
+Nothing has been deleted automatically. {"userId":1,"exception":"[object] 
+(App\\Services\\Quota\\QuotaExceededException(code: 0): Your storage is full. Delete some scans to free space before 
+uploading more. Nothing has been deleted automatically. at 
+C:/Users/Win11/OneDrive/Documents/agriscanner/app/Services/Quota/QuotaExceededException.php:11)
+#0 C:/Users/Win11/OneDrive/Documents/agriscanner/app/Services/Quota/QuotaService.php(61): 
+App/Services/Quota/QuotaExceededException::full()
+[2026-11-02 06:56:08] testing.ERROR: Only JPG, PNG and WEBP images are accepted. {"userId":1,"exception":"[object] 
+(App\\Services\\Ai\\Exceptions\\InvalidImageException(code: 0): Only JPG, PNG and WEBP images are accepted. at 
+C:/Users/Win11/OneDrive/Documents/agriscanner/app/Services/Scans/ImageInspector.php:30)
+[2026-11-02 06:56:08] testing.ERROR: The image is too large. The maximum is 50├ù50 pixels. 
+{"userId":1,"exception":"[object] (App\\Services\\Ai\\Exceptions\\InvalidImageException(code: 0): The image is too 
+large. The maximum is 50├ù50 pixels. at 
+C:/Users/Win11/OneDrive/Documents/agriscanner/app/Services/Scans/ImageInspector.php:44)
+[2026-11-02 06:56:08] testing.WARNING: ai.provider_failed 
+{"provider":"huggingface","category":"provider_error","status":503,"attempt":1} 
+[2026-11-02 06:56:08] testing.WARNING: ai.provider_failed 
+{"provider":"huggingface","category":"provider_error","status":503,"attempt":2} 
+[2026-11-02 06:56:08] testing.WARNING: ai.provider_failed 
+{"provider":"huggingface","category":"provider_error","status":503,"attempt":3} 
+[2026-11-02 06:56:08] testing.ERROR: Crop analysis is unavailable right now, so no result was produced. Your photo was 
+not analysed ΓÇö please try again in a few minutes. {"userId":1,"exception":"[object] 
+(App\\Services\\Ai\\Exceptions\\AnalysisUnavailableException(code: 0): Crop analysis is unavailable right now, so no 
+result was produced. Your photo was not analysed ΓÇö please try again in a few minutes. at 
+C:/Users/Win11/OneDrive/Documents/agriscanner/app/Services/Ai/AiAnalysisService.php:93)
+[2026-11-02 06:56:08] testing.WARNING: ai.provider_failed 
+{"provider":"huggingface","category":"provider_error","status":503,"attempt":1} 
+[2026-11-02 06:56:08] testing.WARNING: ai.provider_failed 
+{"provider":"huggingface","category":"provider_error","status":503,"attempt":2} 
+[2026-11-02 06:56:08] testing.WARNING: ai.provider_failed 
+{"provider":"huggingface","category":"provider_error","status":503,"attempt":3} 
+[2026-11-02 06:56:08] testing.ERROR: Crop analysis is unavailable right now, so no result was produced. Your photo was 
+not analysed ΓÇö please try again in a few minutes. {"userId":1,"exception":"[object] 
+(App\\Services\\Ai\\Exceptions\\AnalysisUnavailableException(code: 0): Crop analysis is unavailable right now, so no 
+result was produced. Your photo was not analysed ΓÇö please try again in a few minutes. at 
+C:/Users/Win11/OneDrive/Documents/agriscanner/app/Services/Ai/AiAnalysisService.php:93)
+[2026-11-02 06:56:08] testing.ERROR: This retry key was already used with a different photo. Please start a new scan. 
+{"userId":1,"exception":"[object] (App\\Services\\Ai\\Exceptions\\InvalidImageException(code: 0): This retry key was 
+already used with a different photo. Please start a new scan. at 
+C:/Users/Win11/OneDrive/Documents/agriscanner/app/Services/Scans/ScanService.php:61)
+  Γ£ô a failed replica delete keeps the scan queues a retry and does not free quota                                  
+0.04s  
+[2026-11-02 06:56:08] testing.WARNING: storage.delete_failed {"provider":"secondary","reason":"secondary: simulated 
+delete failure"} 
+[2026-11-02 06:56:08] testing.ERROR: The photo could not be removed from storage right now, so the scan was kept. Please 
+try again shortly. {"userId":1,"exception":"[object] 
+(App\\Services\\Storage\\Exceptions\\StorageUnavailableException(code: 0): The photo could not be removed from storage 
+right now, so the scan was kept. Please try again shortly. at 
+C:/Users/Win11/OneDrive/Documents/agriscanner/app/Services/Scans/ScanService.php:196)
+#50 C:/Users/Win11/OneDrive/Documents/agriscanner/vendor/phpunit/phpunit/src/Framework/TestCase.php(1667): 
+Tests/Feature/ScanCreationTest->test_a_failed_replica_delete_keeps_the_scan_queues_a_retry_and_does_not_free_quota()
+[2026-11-02 06:56:08] testing.WARNING: storage.write_failed {"provider":"r2","reason":"r2: simulated outage"} 
+[2026-11-02 06:56:08] testing.WARNING: storage.write_failed {"provider":"r2","reason":"r2: simulated outage"} 
+[2026-11-02 06:56:08] testing.WARNING: storage.write_failed {"provider":"secondary","reason":"secondary: simulated 
+outage"} 
+[2026-11-02 06:56:08] testing.ERROR: We could not store your photo safely right now, so nothing was saved. Please try 
+again in a few minutes. {"userId":1,"exception":"[object] 
+(App\\Services\\Storage\\Exceptions\\StorageUnavailableException(code: 0): We could not store your photo safely right 
+now, so nothing was saved. Please try again in a few minutes. at 
+C:/Users/Win11/OneDrive/Documents/agriscanner/app/Services/Storage/Exceptions/StorageUnavailableException.php:17)
+#0 C:/Users/Win11/OneDrive/Documents/agriscanner/app/Services/Storage/StorageManager.php(88): 
+App/Services/Storage/Exceptions/StorageUnavailableException::allFailed()
+[2026-11-02 06:56:08] testing.WARNING: storage.write_failed {"provider":"r2","reason":"r2: upload verification failed"} 
+[2026-11-02 06:56:08] testing.ERROR: We could not store your photo safely right now, so nothing was saved. Please try 
+again in a few minutes. {"userId":1,"exception":"[object] 
+(App\\Services\\Storage\\Exceptions\\StorageUnavailableException(code: 0): We could not store your photo safely right 
+now, so nothing was saved. Please try again in a few minutes. at 
+C:/Users/Win11/OneDrive/Documents/agriscanner/app/Services/Storage/Exceptions/StorageUnavailableException.php:17)
+#0 C:/Users/Win11/OneDrive/Documents/agriscanner/app/Services/Storage/StorageManager.php(88): 
+App/Services/Storage/Exceptions/StorageUnavailableException::allFailed()
+[2026-11-02 06:56:08] testing.ERROR: Image storage is not available right now. Your photo was not saved. Please try 
+again later. {"userId":1,"exception":"[object] (App\\Services\\Storage\\Exceptions\\StorageUnavailableException(code: 
+0): Image storage is not available right now. Your photo was not saved. Please try again later. at 
+C:/Users/Win11/OneDrive/Documents/agriscanner/app/Services/Storage/Exceptions/StorageUnavailableException.php:12)
+#0 C:/Users/Win11/OneDrive/Documents/agriscanner/app/Services/Storage/StorageManager.php(67): 
+App/Services/Storage/Exceptions/StorageUnavailableException::noneConfigured()
+[2026-11-02 06:56:08] testing.WARNING: storage.write_failed {"provider":"r2","reason":"r2: simulated outage"} 
+[2026-11-02 06:56:08] testing.WARNING: storage.write_failed {"provider":"secondary","reason":"secondary: simulated 
+outage"} 
+  Γ£ô transient write errors are retried on the same store                                                           
+0.04s  
+  Γ£ô manager throws a clear error when everything fails                                                             
+0.02s  
+  Γ¿» failed analysis flashes an error and saves nothing                                                             
+0.03s  
+  Γ£ô non images are rejected with a validation error                                                                
+0.02s  
+   FAILED  Tests\Feature\DatabaseOutageTest > other database errors return a generic 500 without leaking sql             
+ 
+  Expected: {\n
+    "exception": "Illuminate\\Database\\QueryException",\n
+            "function": "{closure:Tests\\Feature\\DatabaseOutageTest::test_other_database_errors_return_a_generic_500_wit
+hout_leaking_sql():58}",\n
+            "function": "test_other_database_errors_return_a_generic_500_without_leaking_sql",\n
+  at tests\Feature\DatabaseOutageTest.php:66
+     69Γûò     public function test_a_failed_scan_save_is_never_reported_as_saved_and_is_recorded_for_recovery(): void
+   FAILED  Tests\Feature\QuotaTest > lowering a quota below usage blocks new uploads but deletes nothing                 
+ 
+Failed asserting that 100 is identical to 100.0.
+  at tests\Feature\QuotaTest.php:94
+   FAILED  Tests\Feature\WebUiTest > farmers get 403 on admin pages and admins get in                                    
+ 
+  Expected response status code [200] but received 302.
+Failed asserting that 302 is identical to 200.
+  at tests\Feature\WebUiTest.php:76
+   FAILED  Tests\Feature\WebUiTest > failed analysis flashes an error and saves nothing                                  
+ 
+  Failed asserting that 1 is identical to 0.
+  at tests\Feature\WebUiTest.php:116
+    115Γûò             ->assertRedirect('/scan')->assertSessionHas('error');
+   FAILED  Tests\Feature\WebUiTest > other users scans are 404                                                           
+ 
+  Expected response status code [404] but received 302.
+Failed asserting that 302 is identical to 404.
+  at tests\Feature\WebUiTest.php:128
+  Tests:    5 failed, 127 passed (632 assertions)
+[2026-11-02 06:56:09] testing.ERROR: Crop analysis is not configured yet, so no result was produced. Please contact the 
+administrator. {"userId":1,"exception":"[object] (App\\Services\\Ai\\Exceptions\\AnalysisUnavailableException(code: 0): 
+Crop analysis is not configured yet, so no result was produced. Please contact the administrator. at 
+C:/Users/Win11/OneDrive/Documents/agriscanner/app/Services/Ai/AiAnalysisService.php:60)
+#26 C:/Users/Win11/OneDrive/Documents/agriscanner/vendor/laravel/framework/src/Illuminate/View/Middleware/ShareErrorsFrom
+Session.php(48): Illuminate/Pipeline/Pipeline->{closure:{closure:Illuminate/Pipeline/Pipeline::carry():194}:195}()
+#27 C:/Users/Win11/OneDrive/Documents/agriscanner/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(219): 
+Illuminate/View/Middleware/ShareErrorsFromSession->handle()
+#66 C:/Users/Win11/OneDrive/Documents/agriscanner/vendor/phpunit/phpunit/src/Framework/TestCase.php(1667): 
+Tests/Feature/WebUiTest->test_failed_analysis_flashes_an_error_and_saves_nothing()
+
+
