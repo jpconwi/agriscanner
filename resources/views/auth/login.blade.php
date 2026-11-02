@@ -12,4 +12,5 @@
     <div class="text-right"><a class="text-sm text-forest-800 underline" href="{{ route('password.request') }}">Forgot password?</a></div>
     <button type="submit" class="btn btn-primary w-full" :disabled="busy">Sign in</button>
 </form>
+@include('auth._google')
 @endsection

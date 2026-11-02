@@ -13,4 +13,5 @@
     <x-field name="password_confirmation" label="Confirm password"><input id="password_confirmation" name="password_confirmation" type="password" autocomplete="new-password" required class="input"></x-field>
     <button type="submit" class="btn btn-primary w-full" :disabled="busy">Create account</button>
 </form>
+@include('auth._google')
 @endsection

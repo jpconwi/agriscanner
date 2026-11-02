@@ -15,6 +15,9 @@ Route::middleware('guest')->group(function () {
     Route::post('/login', [Web\AuthController::class, 'login'])->middleware('throttle:login');
     Route::get('/register', [Web\AuthController::class, 'showRegister'])->name('register');
     Route::post('/register', [Web\AuthController::class, 'register'])->middleware('throttle:auth-sensitive');
+    // Sign in with Google (OAuth 2.0 code flow).
+    Route::get('/auth/google', [Web\GoogleAuthController::class, 'redirect'])->middleware('throttle:auth-sensitive')->name('auth.google');
+    Route::get('/auth/google/callback', [Web\GoogleAuthController::class, 'callback'])->middleware('throttle:auth-sensitive')->name('auth.google.callback');
 });
 // Reset pages work whether or not someone happens to be signed in.
 Route::get('/forgot-password', [Web\AuthController::class, 'showForgot'])->name('password.request');
