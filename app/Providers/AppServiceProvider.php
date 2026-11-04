@@ -7,6 +7,7 @@ use App\Policies\ScanPolicy;
 use App\Services\Ai\AiAnalysisService;
 use App\Services\Ai\Providers\GrokProvider;
 use App\Services\Ai\Providers\HuggingFaceProvider;
+use App\Services\Storage\CloudinaryObjectStore;
 use App\Services\Storage\FlysystemObjectStore;
 use App\Services\Storage\StorageManager;
 use App\Support\EnvironmentValidator;
@@ -29,7 +30,9 @@ class AppServiceProvider extends ServiceProvider
             // Insertion order = priority order. Unknown names in STORAGE_PRIORITY are ignored.
             foreach ($cfg['priority'] as $name) {
                 if (isset($cfg['stores'][$name])) {
-                    $stores[$name] = new FlysystemObjectStore($name, $cfg['stores'][$name]);
+                    $stores[$name] = ($cfg['stores'][$name]['driver'] ?? 's3') === 'cloudinary'
+                        ? new CloudinaryObjectStore($name, $cfg['stores'][$name])
+                        : new FlysystemObjectStore($name, $cfg['stores'][$name]);
                 }
             }
 

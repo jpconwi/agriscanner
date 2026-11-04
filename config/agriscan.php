@@ -62,7 +62,7 @@ return [
     ],
 
     'storage' => [
-        'priority' => array_values(array_filter(array_map('trim', explode(',', (string) env('STORAGE_PRIORITY', 'r2,secondary'))))),
+        'priority' => array_values(array_filter(array_map('trim', explode(',', (string) env('STORAGE_PRIORITY', 'r2,cloudinary,secondary'))))),
         // When true, a successful primary write is also copied to the secondary store (best effort).
         'replicate' => filter_var(env('STORAGE_REPLICATE', false), FILTER_VALIDATE_BOOL),
         'max_retries' => (int) env('STORAGE_MAX_RETRIES', 2),
@@ -84,6 +84,18 @@ return [
                 'throw' => true,
                 // Cloudflare's free allowance is set by Cloudflare. Leave empty if unsure: shown as "Unknown".
                 'provider_limit_bytes' => $nullableInt('R2_FREE_ALLOWANCE_BYTES'),
+            ],
+            // Cloudinary (free plan, no card). Assets are stored as type=authenticated, i.e. never public.
+            'cloudinary' => [
+                'label' => 'Cloudinary',
+                'enabled' => filter_var(env('CLOUDINARY_ENABLED', true), FILTER_VALIDATE_BOOL),
+                'driver' => 'cloudinary',
+                'cloud_name' => env('CLOUDINARY_CLOUD_NAME'),
+                'api_key' => env('CLOUDINARY_API_KEY'),
+                'api_secret' => env('CLOUDINARY_API_SECRET'),
+                'folder' => env('CLOUDINARY_FOLDER', 'agriscan'),
+                'timeout' => (int) env('CLOUDINARY_TIMEOUT', 20),
+                'provider_limit_bytes' => $nullableInt('CLOUDINARY_LIMIT_BYTES'),
             ],
             'secondary' => [
                 'label' => 'Secondary S3-compatible storage',

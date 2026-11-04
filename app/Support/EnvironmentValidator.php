@@ -50,7 +50,9 @@ final class EnvironmentValidator
         $r2Ok = $r2['enabled'] && filled($r2['key']) && filled($r2['secret']) && filled($r2['bucket']) && filled($r2['endpoint']);
         $sec = config('agriscan.storage.stores.secondary');
         $secOk = $sec['enabled'] && filled($sec['key']) && filled($sec['secret']) && filled($sec['bucket']);
-        if (! $r2Ok && ! $secOk) {
+        $cl = config('agriscan.storage.stores.cloudinary');
+        $clOk = ($cl['enabled'] ?? false) && filled($cl['cloud_name'] ?? null) && filled($cl['api_key'] ?? null) && filled($cl['api_secret'] ?? null);
+        if (! $r2Ok && ! $secOk && ! $clOk) {
             $warnings[] = 'No object storage is configured; uploads will be rejected (local disk is never used for permanent storage).';
         }
         if (config('agriscan.storage.replicate') && ! ($r2Ok && $secOk)) {
