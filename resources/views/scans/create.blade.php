@@ -12,7 +12,9 @@
           x-data="scanner({{ (int) ($maxMb * 1024 * 1024) }})" @submit="onSubmit($event)">
         @csrf
         {{-- One key per selected photo: retrying the same upload never creates a duplicate scan or charges quota twice. --}}
-        <input type="hidden" name="idempotency_key" value="{{ old('idempotency_key', (string) \Illuminate\Support\Str::uuid()) }}">
+        <input type="hidden" name="idempotency_key" x-ref="key" value="{{ old('idempotency_key', (string) \Illuminate\Support\Str::uuid()) }}">
+        {{-- Fingerprint (name, size, date) of the photo the key belongs to. A different photo always gets a fresh key. --}}
+        <input type="hidden" name="idem_fp" x-ref="fp" value="{{ old('idem_fp') }}">
 
         <div class="flex min-h-72 flex-col items-center justify-center rounded-xl border-2 border-dashed border-sand-200 bg-paper p-4 text-center"
              @dragover.prevent @drop.prevent="drop($event)">
@@ -76,6 +78,12 @@
                     if (f.size > maxBytes) { this.reject('That image is too large. The maximum size is ' + Math.round(maxBytes / 1048576) + ' MB.'); return; }
                     if (this.preview) { URL.revokeObjectURL(this.preview); }
                     this.preview = URL.createObjectURL(f); this.hasFile = true;
+                    var fp = f.name + '|' + f.size + '|' + f.lastModified;
+                    if (this.$refs.fp.value !== fp) {
+                        // New or different photo: new retry key. The same photo keeps its key, so a retry is never double-counted.
+                        this.$refs.key.value = (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : (Date.now() + '-' + Math.random().toString(16).slice(2));
+                        this.$refs.fp.value = fp;
+                    }
                 },
                 reject: function (msg) { this.clientError = msg; this.$refs.file.value = ''; this.hasFile = false; this.preview = null; },
                 drop: function (e) {
