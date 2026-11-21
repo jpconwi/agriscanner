@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Models\Scan;
 use App\Policies\ScanPolicy;
 use App\Services\Ai\AiAnalysisService;
+use App\Services\Ai\Providers\CloudflareProvider;
 use App\Services\Ai\Providers\GrokProvider;
 use App\Services\Ai\Providers\HuggingFaceProvider;
 use App\Services\Storage\CloudinaryObjectStore;
@@ -43,6 +44,7 @@ class AppServiceProvider extends ServiceProvider
             $ai = config('agriscan.ai');
             $providers = [
                 'huggingface' => new HuggingFaceProvider($ai['providers']['huggingface'], $ai['timeout_seconds']),
+                'cloudflare' => new CloudflareProvider($ai['providers']['cloudflare'], $ai['timeout_seconds']),
                 'grok' => new GrokProvider($ai['providers']['grok'], $ai['timeout_seconds']),
             ];
 

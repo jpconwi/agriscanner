@@ -13,12 +13,13 @@ One Laravel 12 application: server-rendered Blade UI (Tailwind + Alpine) for far
 | Dashboard, advisories, per-user storage quota meter, upload error / pending notices | Complete |
 | Admin: users & roles, quotas, crop/disease CRUD, advisory CRUD, scan stats | Complete |
 | Admin monitoring: AI / DB / storage health, pending retries, failed jobs, audit log, thresholds | Complete; DB/R2 capacity shows **"Unknown"** unless you supply the limit |
+| Cloudflare Workers AI fallback | Optional; needs `CLOUDFLARE_ACCOUNT_ID` + `CLOUDFLARE_AI_API_TOKEN` |
 | Grok fallback | Off. Needs `GROK_ENABLED`, `GROK_ACCESS_AUTHORIZED=true`, key and model |
 | Secondary S3 storage / secondary Postgres | Optional; off by default |
 | Tests with mocked providers/storage | Written (API + Blade flows); not yet run |
 
 ## Design guarantees
-- **AI chain**: Hugging Face → Grok (only if explicitly authorised) → clear failure. Timeouts, bounded exponential-backoff retries, no retry on invalid input. Results are matched only against your curated disease library; unknown conditions get no invented treatment. Confidence is `null` when the model gives none.
+- **AI chain**: Hugging Face → Cloudflare Workers AI → Grok (only if explicitly authorised) → clear failure. Order is `AI_PROVIDER_PRIORITY`; unconfigured providers are skipped. Timeouts, bounded exponential-backoff retries, no retry on invalid input. Results are matched only against your curated disease library; unknown conditions get no invented treatment. Confidence is `null` when the model gives none.
 - **Storage**: R2 → optional secondary S3 → controlled failure. Private buckets, signed URLs, read-back verified uploads, replica-aware deletion. Nothing is written to Render's disk.
 - **Database**: Neon is primary. The secondary is for explicit recovery/journal only and is never read automatically. A scan is reported saved only if the DB write succeeded; idempotency keys prevent duplicates on retry.
 - **Quotas** are separate from R2/Neon limits, enforced server-side under row locks, and never auto-delete files.
@@ -47,6 +48,9 @@ CSS/JS are pre-built and committed. To change styles: `npm install && npm run bu
 ## Providers
 - **Hugging Face — choosing a model**: set `HUGGINGFACE_MODEL` to a plant-disease *image-classification* model that is actually served by your inference provider (check its page for "Inference Providers"), with `HUGGINGFACE_TASK=image-classification` for real class probabilities. Its labels (e.g. `Tomato___Early_blight`) are normalised and matched to your Diseases; add diseases whose names match. The admin AI tab shows whether the model responds. A vision-chat model works with `HUGGINGFACE_TASK=chat` but yields no calibrated confidence.
 - **Cloudflare R2**: create a **private** bucket and an S3 API token (Object Read & Write); set endpoint `https://<account>.r2.cloudflarestorage.com`. No public access or CORS is needed because the server uploads and hands out signed URLs.
+- **Cloudflare Workers AI**: create an API token with the *Workers AI* permission and set `CLOUDFLARE_ACCOUNT_ID` and `CLOUDFLARE_AI_API_TOKEN` (this is a different token from the R2 keys). The default model is `@cf/meta/llama-3.2-11b-vision-instruct`, a vision-language model, so it reports no confidence score. **One-time step:** Meta's licence must be accepted per account by sending the prompt `agree` to the model once:
+  `curl.exe https://api.cloudflare.com/client/v4/accounts/<ACCOUNT_ID>/ai/run/@cf/meta/llama-3.2-11b-vision-instruct -H "Authorization: Bearer <TOKEN>" -H "Content-Type: application/json" -d "{\"prompt\":\"agree\"}"`
+  The free plan has a daily allowance; when it runs out the provider is skipped (not billed) and the chain moves on.
 - **Grok**: stays disabled unless `GROK_ENABLED=true` **and** `GROK_ACCESS_AUTHORIZED=true`, with key and model set. Confirm your account's pricing first.
 
 ## Known limits

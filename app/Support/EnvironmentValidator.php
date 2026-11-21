@@ -36,6 +36,12 @@ final class EnvironmentValidator
         } elseif ($hf['enabled']) {
             $warnings[] = 'Hugging Face is enabled but HUGGINGFACE_API_TOKEN or HUGGINGFACE_MODEL is missing.';
         }
+        $cf = config('agriscan.ai.providers.cloudflare');
+        if ($cf['enabled'] && filled($cf['account_id']) && filled($cf['api_token']) && filled($cf['model'])) {
+            $anyAi = true;
+        } elseif ($cf['enabled'] && (filled($cf['account_id']) || filled($cf['api_token']))) {
+            $warnings[] = 'Cloudflare AI is partly configured: it needs CLOUDFLARE_ACCOUNT_ID, CLOUDFLARE_AI_API_TOKEN and CLOUDFLARE_AI_MODEL; it will be skipped.';
+        }
         $grok = config('agriscan.ai.providers.grok');
         if ($grok['enabled'] && (blank($grok['api_key']) || blank($grok['model']) || ! $grok['access_authorized'])) {
             $warnings[] = 'Grok is enabled but GROK_API_KEY, GROK_MODEL or GROK_ACCESS_AUTHORIZED is missing; it will be skipped.';

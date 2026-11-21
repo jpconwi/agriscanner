@@ -20,6 +20,9 @@ services:
       - { key: DB_URL, sync: false }
       - { key: HUGGINGFACE_API_TOKEN, sync: false }
       - { key: HUGGINGFACE_MODEL, sync: false }
+      - { key: AI_PROVIDER_PRIORITY, value: "huggingface,cloudflare,grok" }
+      - { key: CLOUDFLARE_ACCOUNT_ID, sync: false }
+      - { key: CLOUDFLARE_AI_API_TOKEN, sync: false }
       - { key: HUGGINGFACE_TASK, value: image-classification }
       - { key: R2_ACCESS_KEY_ID, sync: false }
       - { key: R2_SECRET_ACCESS_KEY, sync: false }

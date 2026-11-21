@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Sleep;
 
 /**
- * Runs the configured provider chain (default: Hugging Face -> Grok -> clear failure).
+ * Runs the configured provider chain (default: Hugging Face -> Cloudflare -> Grok -> clear failure).
  *
  *  - Unconfigured / unauthorised providers are skipped silently.
  *  - Transient errors (timeouts, 5xx, rate limits) are retried on the same provider with exponential backoff, bounded.

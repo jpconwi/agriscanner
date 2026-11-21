@@ -31,7 +31,7 @@ return [
 
     'ai' => [
         // Comma separated, first = primary. Unconfigured providers are skipped automatically.
-        'priority' => array_values(array_filter(array_map('trim', explode(',', (string) env('AI_PROVIDER_PRIORITY', 'huggingface,grok'))))),
+        'priority' => array_values(array_filter(array_map('trim', explode(',', (string) env('AI_PROVIDER_PRIORITY', 'huggingface,cloudflare,grok'))))),
         'timeout_seconds' => (int) env('AI_TIMEOUT_SECONDS', 45),
         'max_retries' => (int) env('AI_MAX_RETRIES', 2),
         'backoff_ms' => (int) env('AI_BACKOFF_MS', 500),
@@ -48,6 +48,14 @@ return [
                 'classification_base' => env('HUGGINGFACE_CLASSIFICATION_BASE', 'https://router.huggingface.co/hf-inference/models'),
                 'chat_url' => env('HUGGINGFACE_CHAT_URL', 'https://router.huggingface.co/v1/chat/completions'),
                 'hub_url' => env('HUGGINGFACE_HUB_URL', 'https://huggingface.co/api/models'),
+            ],
+            // Cloudflare Workers AI (vision-language model). Free daily allowance; it errors rather than bills when used up.
+            'cloudflare' => [
+                'enabled' => filter_var(env('CLOUDFLARE_AI_ENABLED', true), FILTER_VALIDATE_BOOL),
+                'account_id' => env('CLOUDFLARE_ACCOUNT_ID'),
+                'api_token' => env('CLOUDFLARE_AI_API_TOKEN'),
+                'model' => env('CLOUDFLARE_AI_MODEL', '@cf/meta/llama-3.2-11b-vision-instruct'),
+                'base_url' => env('CLOUDFLARE_API_BASE', 'https://api.cloudflare.com/client/v4'),
             ],
             'grok' => [
                 'enabled' => filter_var(env('GROK_ENABLED', false), FILTER_VALIDATE_BOOL),
