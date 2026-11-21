@@ -92,7 +92,7 @@ class HuggingFaceProvider implements VisionProvider
                 ->post($this->config['chat_url'], [
                     'model' => $this->config['model'],
                     'temperature' => 0,
-                    'max_tokens' => 200,
+                    'max_tokens' => ChatVision::MAX_TOKENS,
                     'messages' => [[
                         'role' => 'user',
                         'content' => [
@@ -110,7 +110,7 @@ class HuggingFaceProvider implements VisionProvider
         $parsed = ChatVision::parse((string) $response->json('choices.0.message.content', ''));
 
         // Chat models do not provide calibrated probabilities, so confidence stays null.
-        return new AnalysisResult('huggingface', $this->config['model'], $parsed['crop'], $parsed['condition'], $parsed['is_healthy'], null);
+        return new AnalysisResult('huggingface', $this->config['model'], $parsed['crop'], $parsed['condition'], $parsed['is_healthy'], null, [], null, $parsed['details']);
     }
 
     public function verify(): array

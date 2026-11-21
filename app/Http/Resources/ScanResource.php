@@ -36,6 +36,9 @@ class ScanResource extends JsonResource
             'treatments' => $rec['treatments'] ?? [],
             'prevention' => $rec['prevention'] ?? [],
             'follow_up' => $rec['follow_up'] ?? null,
+            'summary' => $rec['summary'] ?? null,
+            // 'library' = verified reference entry, 'ai' = general guidance written by the model, null = none
+            'guidance_source' => $rec['source'] ?? null,
             'disclaimer' => ScanResource::DISCLAIMER,
             'image_url' => $url,
             'thumbnail_url' => $url,

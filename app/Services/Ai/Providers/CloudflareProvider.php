@@ -13,7 +13,8 @@ use Illuminate\Support\Str;
 
 /**
  * Cloudflare Workers AI over its REST API (no SDK). Uses a vision-language model, so like the other chat
- * providers it reports no calibrated confidence and only answers from the KNOWN disease list.
+ * providers it reports no calibrated confidence. It identifies the crop and condition itself (preferring names from
+ * the KNOWN disease list) and writes general guidance, which the matcher only uses when the library has no entry.
  *
  * Free plan: Cloudflare gives a daily allowance and then answers with an error (it does not bill), which this
  * provider maps to a non-retried "rate_limited" so the chain moves straight on to the next provider.
@@ -57,7 +58,7 @@ class CloudflareProvider implements VisionProvider
                 ->connectTimeout(10)->timeout($this->timeout)
                 ->post($this->base().'/ai/run/'.ltrim($this->config['model'], '/'), [
                     'temperature' => 0,
-                    'max_tokens' => 200,
+                    'max_tokens' => ChatVision::MAX_TOKENS,
                     'messages' => [[
                         'role' => 'user',
                         'content' => [
@@ -79,7 +80,7 @@ class CloudflareProvider implements VisionProvider
 
         $parsed = ChatVision::parse($this->text($response));
 
-        return new AnalysisResult('cloudflare', $this->config['model'], $parsed['crop'], $parsed['condition'], $parsed['is_healthy'], null);
+        return new AnalysisResult('cloudflare', $this->config['model'], $parsed['crop'], $parsed['condition'], $parsed['is_healthy'], null, [], null, $parsed['details']);
     }
 
     /** Workers AI returns {result: {response: "..."}}; some models use the OpenAI "choices" shape instead. */

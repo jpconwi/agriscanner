@@ -2,8 +2,10 @@
     $pct = $scan['confidence'] === null ? null : round($scan['confidence'] * 100);
     $sections = [
         ['Symptoms to look for', $scan['symptoms']], ['Possible contributing factors', $scan['contributing_factors']],
-        ['Treatment options', $scan['treatments']], ['Prevention', $scan['prevention']],
+        [$scan['guidance_source'] === 'ai' ? 'General management' : 'Treatment options', $scan['treatments']], ['Prevention', $scan['prevention']],
     ];
+    $label = $scan['disease']['name'] ?? $scan['predicted_label'] ?? null;
+    $label = ($label === null || strtolower(trim($label)) === 'unknown') ? null : ucfirst($label);
 @endphp
 <div class="space-y-4">
     <div class="card grid gap-5 md:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]">
@@ -17,8 +19,9 @@
                 <span class="badge {{ $scan['is_healthy'] ? 'badge-success' : 'badge-warning' }}">{{ $scan['is_healthy'] ? 'Appears healthy' : 'Possible issue' }}</span>
                 @if ($scan['status'] !== 'completed')<span class="badge badge-danger">{{ $scan['status'] }}</span>@endif
             </div>
-            <h2 class="mt-3 text-3xl font-semibold text-forest-950">{{ $scan['is_healthy'] ? 'No disease detected' : ($scan['disease']['name'] ?? $scan['predicted_label'] ?? 'Unidentified condition') }}</h2>
-            <p class="mt-1 text-sm text-ink-soft">Crop: {{ $scan['crop']['name'] ?? $scan['crop_label'] ?? 'Not determined' }}</p>
+            <h2 class="mt-3 text-3xl font-semibold text-forest-950">{{ $scan['is_healthy'] ? 'No disease detected' : ($label ?? 'Unidentified condition') }}</h2>
+            <p class="mt-1 text-sm text-ink-soft">Crop: {{ $scan['crop']['name'] ?? ($scan['crop_label'] ? ucfirst($scan['crop_label']) : 'Not determined') }} <span class="text-xs">(detected automatically)</span></p>
+            @if ($scan['summary'])<p class="mt-3 text-sm text-ink">{{ $scan['summary'] }}</p>@endif
 
             <div class="mt-5">
                 <p class="text-xs font-medium uppercase tracking-wide text-ink-soft">Model confidence</p>
@@ -40,6 +43,10 @@
 
     @if ($scan['status'] !== 'completed')
         <div class="card border-amber-300 bg-amber-50 text-sm text-amber-900">This scan has not completed analysis. {{ $scan['failure_message'] ?? 'You can delete it and try again.' }}</div>
+    @endif
+
+    @if ($scan['guidance_source'] === 'ai')
+        <div class="card border-amber-300 bg-amber-50 text-sm text-amber-900">This condition is not in your verified reference library, so the guidance below is general advice written by the AI from the photo. It may be wrong. Please confirm with a local agricultural technician before acting.</div>
     @endif
 
     <div class="grid gap-4 md:grid-cols-2">

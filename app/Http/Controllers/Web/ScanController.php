@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Web;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreScanRequest;
 use App\Http\Resources\ScanResource;
-use App\Models\Crop;
 use App\Models\Scan;
 use App\Services\Ai\Exceptions\InvalidImageException;
 use App\Services\Quota\QuotaService;
@@ -21,7 +20,6 @@ class ScanController extends Controller
     public function create(Request $request, QuotaService $quota)
     {
         return view('scans.create', [
-            'crops' => Crop::orderBy('name')->get(['id', 'name']),
             'usage' => $quota->usageFor($request->user()),
             'maxMb' => round(config('agriscan.uploads.max_kb') / 1024, 1),
         ]);

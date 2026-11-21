@@ -47,7 +47,7 @@ class GrokProvider implements VisionProvider
                 ->post(rtrim($this->config['base_url'], '/').'/chat/completions', [
                     'model' => $this->config['model'],
                     'temperature' => 0,
-                    'max_tokens' => 200,
+                    'max_tokens' => ChatVision::MAX_TOKENS,
                     'messages' => [[
                         'role' => 'user',
                         'content' => [
@@ -64,7 +64,7 @@ class GrokProvider implements VisionProvider
         }
         $parsed = ChatVision::parse((string) $response->json('choices.0.message.content', ''));
 
-        return new AnalysisResult('grok', $this->config['model'], $parsed['crop'], $parsed['condition'], $parsed['is_healthy'], null);
+        return new AnalysisResult('grok', $this->config['model'], $parsed['crop'], $parsed['condition'], $parsed['is_healthy'], null, [], null, $parsed['details']);
     }
 
     public function verify(): array

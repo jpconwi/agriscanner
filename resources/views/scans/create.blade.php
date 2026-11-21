@@ -33,12 +33,7 @@
         @error('image')<p class="field-error" role="alert">{{ $message }}</p>@enderror
 
         <div class="mt-5 space-y-4">
-            <x-field name="crop_id" label="Crop (optional)" hint="Choosing the crop helps match the right reference information.">
-                <select id="crop_id" name="crop_id" class="input">
-                    <option value="">Let the model decide</option>
-                    @foreach ($crops as $crop)<option value="{{ $crop->id }}" @selected((string) old('crop_id') === (string) $crop->id)>{{ $crop->name }}</option>@endforeach
-                </select>
-            </x-field>
+            <p class="text-sm text-ink-soft">The crop and any problem are detected automatically from your photo. No need to choose anything.</p>
 
             <div x-show="busy" x-cloak aria-live="polite" class="rounded-lg bg-leaf-50 px-4 py-3 text-sm text-forest-900">
                 Uploading and analysing your photo. This can take up to a minute, so please keep this page open…

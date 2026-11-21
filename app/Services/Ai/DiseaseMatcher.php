@@ -8,8 +8,10 @@ use App\Services\Ai\Dto\AnalysisResult;
 use App\Support\LabelNormalizer;
 
 /**
- * Maps a model label onto the curated reference library. Recommendations come ONLY from the library:
- * unknown conditions produce no treatment text, never an invented one.
+ * Maps a model label onto the curated reference library. A library match always wins and supplies the verified
+ * recommendations. With no match, the model's own general guidance is used instead (already stripped of doses and
+ * product names by AiGuidance) and is tagged source=ai so it is shown as unverified. A classifier that returns only
+ * a label has no guidance, so those scans still get no text for conditions outside the library.
  */
 class DiseaseMatcher
 {
@@ -30,7 +32,28 @@ class DiseaseMatcher
         return [
             'crop' => $crop,
             'disease' => $disease,
-            'recommendations' => $disease ? $disease->recommendationSnapshot() : $this->empty(),
+            'recommendations' => $this->recommendations($disease, $result->details),
+        ];
+    }
+
+    /** @param ?array $details sanitised AI guidance, or null */
+    private function recommendations(?Disease $disease, ?array $details): array
+    {
+        if ($disease) {
+            return $disease->recommendationSnapshot() + ['summary' => $details['summary'] ?? null, 'source' => 'library'];
+        }
+        if ($details === null) {
+            return $this->empty();
+        }
+
+        return [
+            'symptoms' => $details['symptoms'],
+            'contributing_factors' => $details['causes'],
+            'treatments' => $details['management'],
+            'prevention' => $details['prevention'],
+            'follow_up' => null,
+            'summary' => $details['summary'],
+            'source' => 'ai',
         ];
     }
 

@@ -2,6 +2,7 @@
 
 namespace App\Services\Ai\Providers;
 
+use App\Services\Ai\AiGuidance;
 use App\Services\Ai\Exceptions\ProviderException;
 use App\Support\LabelNormalizer;
 use Illuminate\Http\Client\Response;
@@ -9,19 +10,29 @@ use Illuminate\Http\Client\Response;
 /** Shared prompt + response handling for OpenAI-compatible vision chat endpoints. */
 final class ChatVision
 {
+    /** Room for the JSON answer with its guidance lists; the old 200 would cut the reply off mid-object. */
+    public const MAX_TOKENS = 900;
+
     public static function prompt(array $knownConditions): string
     {
         $list = $knownConditions === [] ? '(none provided)' : implode('; ', array_slice($knownConditions, 0, 80));
 
         return <<<TXT
-You are assisting a farmer. Look at this plant photograph and reply with ONLY a JSON object, no prose:
-{"crop": "<crop common name or null>", "condition": "<one name from the KNOWN list that best matches, 'healthy' if the plant looks healthy, or 'unknown'>", "is_healthy": <true|false>}
-Rules: choose "condition" ONLY from the KNOWN list, or "healthy", or "unknown". Do not invent diseases, treatments, doses or confidence scores. If the image is not a plant, use "unknown".
+You are an experienced plant pathologist helping a farmer. Look at the plant photograph, identify the crop yourself, and reply with ONLY one JSON object (no prose, no markdown):
+{"crop": "<common name of the crop or plant, or null>", "condition": "<disease or disorder name, 'healthy', or 'unknown'>", "is_healthy": <true|false>, "summary": "<1-2 sentences: what the problem is and what you can see in the photo>", "symptoms": ["<up to 5 visible signs>"], "causes": ["<up to 4 likely causes or favouring conditions>"], "management": ["<up to 5 safe, general actions>"], "prevention": ["<up to 4 habits>"]}
+Rules:
+- Work out the crop from the photo. Any crop or plant is allowed.
+- For "condition", use the exact name from the KNOWN list when one matches. Otherwise give the most likely common disease or disorder name. If you cannot tell, use "unknown" and still describe what is visible in "symptoms".
+- Describe only what you can see. If you are unsure, say so in "summary". Never give confidence scores.
+- "management" is general, practical advice only (for example removing infected leaves, spacing and airflow, drainage, crop rotation, clean tools, resistant varieties, asking a local agricultural technician). Do NOT name any pesticide, fungicide or active ingredient, and give NO doses, rates, mixing amounts or spray schedules.
+- If the plant looks healthy: condition "healthy", is_healthy true, and a short general care tip.
+- If the photo shows no plant: crop null, condition "unknown", is_healthy false, empty lists.
+- Keep every item under 160 characters.
 KNOWN: {$list}
 TXT;
     }
 
-    /** @return array{crop: ?string, condition: string, is_healthy: bool} */
+    /** @return array{crop: ?string, condition: string, is_healthy: bool, details: ?array} */
     public static function parse(string $content): array
     {
         $json = null;
@@ -36,7 +47,12 @@ TXT;
         $crop = isset($json['crop']) && is_string($json['crop']) && strtolower($json['crop']) !== 'null' ? trim(mb_substr($json['crop'], 0, 80)) : null;
         $healthy = ($json['is_healthy'] ?? null) === true || LabelNormalizer::isHealthy(LabelNormalizer::words($condition));
 
-        return ['crop' => $crop ?: null, 'condition' => $condition === '' ? 'unknown' : $condition, 'is_healthy' => $healthy];
+        return [
+            'crop' => $crop ?: null,
+            'condition' => $condition === '' ? 'unknown' : $condition,
+            'is_healthy' => $healthy,
+            'details' => AiGuidance::sanitize($json),
+        ];
     }
 
     /** Map an HTTP failure to our error categories. Never includes response bodies (may echo keys or prompts). */

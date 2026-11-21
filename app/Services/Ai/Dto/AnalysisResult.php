@@ -15,11 +15,13 @@ final class AnalysisResult
         public readonly ?float $confidence,
         public readonly array $alternatives = [],
         public readonly ?int $latencyMs = null,
+        /** @var ?array{summary: ?string, symptoms: list<string>, causes: list<string>, management: list<string>, prevention: list<string>} AI-written guidance, already sanitised; null for classifiers */
+        public readonly ?array $details = null,
     ) {
     }
 
     public function withLatency(int $ms): self
     {
-        return new self($this->provider, $this->model, $this->cropLabel, $this->conditionLabel, $this->isHealthy, $this->confidence, $this->alternatives, $ms);
+        return new self($this->provider, $this->model, $this->cropLabel, $this->conditionLabel, $this->isHealthy, $this->confidence, $this->alternatives, $ms, $this->details);
     }
 }
