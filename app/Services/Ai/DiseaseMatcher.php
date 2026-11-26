@@ -15,7 +15,7 @@ use App\Support\LabelNormalizer;
  */
 class DiseaseMatcher
 {
-    /** @return array{crop: ?Crop, disease: ?Disease, recommendations: array} */
+    /** @return array{crop: ?Crop, disease: ?Disease, crop_disease_conflict: bool, recommendations: array} */
     public function match(AnalysisResult $result, ?int $cropHintId = null): array
     {
         $crop = $cropHintId ? Crop::find($cropHintId) : null;
@@ -28,11 +28,48 @@ class DiseaseMatcher
                 $crop = $disease->crop;
             }
         }
+        $cropDiseaseConflict = false;
+        if (! $result->isHealthy && ! $disease && $crop) {
+            $cropDiseaseConflict = $this->matchesDiseaseForAnotherCrop(LabelNormalizer::words($result->conditionLabel), $crop);
+        }
 
         return [
             'crop' => $crop,
             'disease' => $disease,
-            'recommendations' => $this->recommendations($disease, $result->details),
+            'crop_disease_conflict' => $cropDiseaseConflict,
+            'recommendations' => $cropDiseaseConflict
+                ? $this->conflictRecommendations()
+                : $this->recommendations($disease, $result->details),
+        ];
+    }
+
+    private function matchesDiseaseForAnotherCrop(string $conditionWords, Crop $crop): bool
+    {
+        if ($conditionWords === '' || $conditionWords === 'unknown') {
+            return false;
+        }
+
+        return Disease::query()
+            ->whereNotNull('crop_id')
+            ->where('crop_id', '!=', $crop->id)
+            ->get()
+            ->contains(function (Disease $disease) use ($conditionWords): bool {
+                $name = LabelNormalizer::words($disease->name);
+
+                return $conditionWords === $name || str_contains(' '.$conditionWords.' ', ' '.$name.' ');
+            });
+    }
+
+    private function conflictRecommendations(): array
+    {
+        return [
+            'symptoms' => [],
+            'contributing_factors' => [],
+            'treatments' => [],
+            'prevention' => [],
+            'follow_up' => null,
+            'summary' => null,
+            'source' => 'conflict',
         ];
     }
 

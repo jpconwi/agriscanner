@@ -2,6 +2,8 @@
 
 namespace Tests\Feature;
 
+use App\Models\Crop;
+use App\Models\Disease;
 use App\Services\Ai\AiGuidance;
 use App\Services\Ai\Dto\AnalysisResult;
 use App\Services\Ai\Exceptions\ProviderException;
@@ -21,22 +23,47 @@ class AutoDetectGuidanceTest extends ScanTestCase
         ];
     }
 
-    private function aiResult(?array $details, string $condition = 'bacterial leaf streak', string $crop = 'banana'): AnalysisResult
+    private function aiResult(?array $details, string $condition = 'bacterial leaf streak', string $crop = 'banana', ?float $confidence = null): AnalysisResult
     {
-        return new AnalysisResult('cloudflare', 'fake-vision', $crop, $condition, false, null, [], null, $details);
+        return new AnalysisResult('cloudflare', 'fake-vision', $crop, $condition, false, $confidence, [], null, $details);
     }
 
     // ---- prompt and parsing ----------------------------------------------------------------------------
 
     public function test_the_prompt_asks_the_model_to_identify_the_crop_and_forbids_doses_and_products(): void
     {
-        $p = ChatVision::prompt(['Early blight']);
+        $p = ChatVision::prompt(['Tomato: Early blight']);
 
         $this->assertStringContainsString('identify the crop yourself', $p);
         $this->assertStringContainsString('Any crop or plant is allowed', $p);
+        $this->assertStringContainsString('do not diagnose a disease listed for a different crop', $p);
         $this->assertStringContainsString('NO doses', $p);
         $this->assertStringContainsString('"follow_up"', $p);
-        $this->assertStringContainsString('Early blight', $p);
+        $this->assertStringContainsString('Tomato: Early blight', $p);
+    }
+
+    public function test_a_known_disease_for_a_different_crop_is_not_shown_as_the_diagnosis(): void
+    {
+        $this->farmer();
+        $tomato = Crop::firstWhere('name', 'Tomato');
+        Crop::create(['name' => 'Rice']);
+        Disease::create([
+            'crop_id' => $tomato->id,
+            'name' => 'Leaf mold',
+            'severity' => 'low',
+        ]);
+        $this->hf->script = [$this->aiResult($this->details(), 'leaf mold', 'rice', 0.91)];
+
+        $res = $this->postScan()->assertCreated();
+
+        $res->assertJsonPath('data.crop.name', 'Rice')
+            ->assertJsonPath('data.predicted_label', 'unknown')
+            ->assertJsonPath('data.disease', null)
+            ->assertJsonPath('data.confidence', null)
+            ->assertJsonPath('data.guidance_source', 'conflict')
+            ->assertJsonPath('data.summary', null);
+        $this->assertSame([], $res->json('data.symptoms'));
+        $this->assertSame([], $res->json('data.treatments'));
     }
 
     public function test_parse_reads_crop_condition_and_guidance(): void

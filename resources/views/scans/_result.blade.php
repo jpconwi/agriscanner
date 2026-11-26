@@ -47,6 +47,8 @@
 
     @if ($scan['guidance_source'] === 'ai')
         <div class="card border-amber-300 bg-amber-50 text-sm text-amber-900">This condition is not in your verified reference library, so the guidance below is general advice written by the AI from the photo. It may be wrong. Please confirm with a local agricultural technician before acting.</div>
+    @elseif ($scan['guidance_source'] === 'conflict')
+        <div class="card border-amber-300 bg-amber-50 text-sm text-amber-900">The model suggested a condition listed for a different crop in your reference library. No diagnosis or disease-specific guidance is shown. Please ask a local agricultural technician to assess the plant.</div>
     @endif
 
     <div class="grid gap-4 md:grid-cols-2">

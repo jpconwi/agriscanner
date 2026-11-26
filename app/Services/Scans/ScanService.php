@@ -116,7 +116,16 @@ class ScanService
 
     private function analyseAndSave(User $user, Scan $scan, array $img, ?int $cropId): Scan
     {
-        $known = Disease::query()->distinct()->orderBy('name')->pluck('name')->all();
+        $known = Disease::query()
+            ->with('crop:id,name')
+            ->orderBy('name')
+            ->get()
+            ->map(static fn (Disease $disease): string => $disease->crop
+                ? $disease->crop->name.': '.$disease->name
+                : $disease->name)
+            ->unique()
+            ->values()
+            ->all();
         try {
             $result = $this->ai->analyze(new ImagePayload($img['bytes'], $img['mime']), $known, $user->id);
         } catch (InvalidImageException $e) {
@@ -159,10 +168,10 @@ class ScanService
         return [
             'disease_id' => $match['disease']?->id,
             'crop_id' => $match['crop']?->id,
-            'predicted_label' => Str::limit($result->conditionLabel, 190, ''),
+            'predicted_label' => $match['crop_disease_conflict'] ? 'unknown' : Str::limit($result->conditionLabel, 190, ''),
             'crop_label' => $result->cropLabel ? Str::limit($result->cropLabel, 120, '') : null,
             'is_healthy' => $result->isHealthy,
-            'confidence' => $result->confidence,
+            'confidence' => $match['crop_disease_conflict'] ? null : $result->confidence,
             'provider' => $result->provider,
             'model' => $result->model,
             'latency_ms' => $result->latencyMs,
