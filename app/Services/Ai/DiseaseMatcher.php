@@ -51,7 +51,7 @@ class DiseaseMatcher
             'contributing_factors' => $details['causes'],
             'treatments' => $details['management'],
             'prevention' => $details['prevention'],
-            'follow_up' => null,
+            'follow_up' => $details['follow_up'] ?? null,
             'summary' => $details['summary'],
             'source' => 'ai',
         ];

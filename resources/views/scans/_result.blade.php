@@ -2,7 +2,7 @@
     $pct = $scan['confidence'] === null ? null : round($scan['confidence'] * 100);
     $sections = [
         ['Symptoms to look for', $scan['symptoms']], ['Possible contributing factors', $scan['contributing_factors']],
-        [$scan['guidance_source'] === 'ai' ? 'General management' : 'Treatment options', $scan['treatments']], ['Prevention', $scan['prevention']],
+        [$scan['guidance_source'] === 'ai' ? 'Treatment and management guidance' : 'Treatment options', $scan['treatments']], ['Prevention', $scan['prevention']],
     ];
     $label = $scan['disease']['name'] ?? $scan['predicted_label'] ?? null;
     $label = ($label === null || strtolower(trim($label)) === 'unknown') ? null : ucfirst($label);

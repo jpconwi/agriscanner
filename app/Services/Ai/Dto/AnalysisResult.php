@@ -15,7 +15,7 @@ final class AnalysisResult
         public readonly ?float $confidence,
         public readonly array $alternatives = [],
         public readonly ?int $latencyMs = null,
-        /** @var ?array{summary: ?string, symptoms: list<string>, causes: list<string>, management: list<string>, prevention: list<string>} AI-written guidance, already sanitised; null for classifiers */
+        /** @var ?array{summary: ?string, symptoms: list<string>, causes: list<string>, management: list<string>, prevention: list<string>, follow_up: ?string} AI-written guidance, already sanitised; null for classifiers */
         public readonly ?array $details = null,
     ) {
     }

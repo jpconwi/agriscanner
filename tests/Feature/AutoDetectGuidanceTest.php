@@ -17,6 +17,7 @@ class AutoDetectGuidanceTest extends ScanTestCase
             'causes' => ['Poor soil fertility', 'Long periods of leaf wetness'],
             'management' => ['Remove badly infected leaves', 'Improve field drainage'],
             'prevention' => ['Use clean seed', 'Balance fertiliser use'],
+            'follow_up' => 'Check for new spots over the next week and contact a local agricultural technician if they spread.',
         ];
     }
 
@@ -34,6 +35,7 @@ class AutoDetectGuidanceTest extends ScanTestCase
         $this->assertStringContainsString('identify the crop yourself', $p);
         $this->assertStringContainsString('Any crop or plant is allowed', $p);
         $this->assertStringContainsString('NO doses', $p);
+        $this->assertStringContainsString('"follow_up"', $p);
         $this->assertStringContainsString('Early blight', $p);
     }
 
@@ -47,6 +49,7 @@ class AutoDetectGuidanceTest extends ScanTestCase
         $this->assertSame('Brown spot', $parsed['condition']);
         $this->assertSame(['Oval brown spots', 'Yellow halo around spots'], $parsed['details']['symptoms']);
         $this->assertSame(['Remove badly infected leaves', 'Improve field drainage'], $parsed['details']['management']);
+        $this->assertSame('Check for new spots over the next week and contact a local agricultural technician if they spread.', $parsed['details']['follow_up']);
     }
 
     public function test_a_minimal_reply_without_guidance_still_parses(): void
@@ -73,9 +76,11 @@ class AutoDetectGuidanceTest extends ScanTestCase
                 'Use 0.5% copper solution',
                 'Improve field drainage',
             ],
+            'follow_up' => 'Recheck in 7 days and apply 2 ml per litre if symptoms remain.',
         ]));
 
         $this->assertSame(['Remove badly infected leaves', 'Improve field drainage'], $clean['management']);
+        $this->assertNull($clean['follow_up']);
     }
 
     public function test_the_guidance_is_trimmed_deduplicated_and_capped(): void
@@ -87,6 +92,7 @@ class AutoDetectGuidanceTest extends ScanTestCase
 
         $this->assertSame('Spots on the leaf.', $clean['summary']);
         $this->assertSame(['A', 'B', 'C', 'D', 'E'], $clean['symptoms']);
+        $this->assertNull($clean['follow_up']);
     }
 
     public function test_empty_guidance_becomes_null(): void
@@ -112,7 +118,8 @@ class AutoDetectGuidanceTest extends ScanTestCase
             ->assertJsonPath('data.symptoms.0', 'Oval brown spots')
             ->assertJsonPath('data.treatments.0', 'Remove badly infected leaves')
             ->assertJsonPath('data.contributing_factors.0', 'Poor soil fertility')
-            ->assertJsonPath('data.prevention.0', 'Use clean seed');
+            ->assertJsonPath('data.prevention.0', 'Use clean seed')
+            ->assertJsonPath('data.follow_up', 'Check for new spots over the next week and contact a local agricultural technician if they spread.');
     }
 
     public function test_a_library_match_wins_over_the_models_own_advice(): void

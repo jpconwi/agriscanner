@@ -101,7 +101,18 @@ class WebUiTest extends ScanTestCase
 
         $scan = Scan::where('user_id', $user->id)->firstOrFail();
         $res->assertRedirect(route('scans.show', $scan->uuid));
-        $this->get(route('scans.show', $scan->uuid))->assertOk()->assertSee('Early blight')->assertSee('Remove infected leaves');
+        $this->get(route('scans.show', $scan->uuid))->assertOk()
+            ->assertSee('Early blight')
+            ->assertSee('Crop: Tomato')
+            ->assertSee('Model confidence')
+            ->assertSee('91%')
+            ->assertSee('Provider')
+            ->assertSee('Symptoms to look for')
+            ->assertSee('Treatment options')
+            ->assertSee('Follow-up monitoring')
+            ->assertSee('Re-scan in a week.')
+            ->assertSee('not a guaranteed diagnosis')
+            ->assertSee('Remove infected leaves');
         $this->get('/history')->assertOk();
     }
 

@@ -18,7 +18,7 @@ final class AiGuidance
 
     /**
      * @param  array<string, mixed>  $json  the decoded model reply
-     * @return array{summary: ?string, symptoms: list<string>, causes: list<string>, management: list<string>, prevention: list<string>}|null
+     * @return array{summary: ?string, symptoms: list<string>, causes: list<string>, management: list<string>, prevention: list<string>, follow_up: ?string}|null
      */
     public static function sanitize(array $json): ?array
     {
@@ -37,7 +37,10 @@ final class AiGuidance
             $out[$key] = array_slice($clean, 0, $max);
         }
 
-        $empty = $out['summary'] === null && ! $out['symptoms'] && ! $out['causes'] && ! $out['management'] && ! $out['prevention'];
+        $followUp = self::line($json['follow_up'] ?? null, 200);
+        $out['follow_up'] = $followUp !== null && ! self::unsafe($followUp) ? $followUp : null;
+
+        $empty = $out['summary'] === null && ! $out['symptoms'] && ! $out['causes'] && ! $out['management'] && ! $out['prevention'] && $out['follow_up'] === null;
 
         return $empty ? null : $out;
     }

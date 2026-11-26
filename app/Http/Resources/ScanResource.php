@@ -9,7 +9,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 /** The public id is the UUID: not guessable or enumerable. Image URLs are short-lived signed URLs to a private bucket. */
 class ScanResource extends JsonResource
 {
-    public const DISCLAIMER = 'This is an AI-generated suggestion and not a confirmed diagnosis. Chemical products and rates must follow the product label and local agricultural guidance; consult an agronomist or extension officer before treating.';
+    public const DISCLAIMER = 'This result is not a guaranteed diagnosis; it is an AI-generated suggestion. Chemical products and rates must follow the product label and local agricultural guidance; consult an agronomist or extension officer before treating.';
 
     public function toArray(Request $request): array
     {
